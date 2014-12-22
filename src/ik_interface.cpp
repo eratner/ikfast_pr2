@@ -71,6 +71,7 @@ bool IKFastPR2::ikAllSolnRightArm(const KDL::Frame& wrist_frame, double free_ang
         return false;
     }
 
+    printf("[IKFast][RightArm] Found %d solutions:\n", solutions.GetNumSolutions());
     std::vector<ik_pr2_rightarm::IkReal> solvalues(ik_pr2_rightarm::GetNumJoints());
     for(size_t i = 0; i < solutions.GetNumSolutions(); ++i) {
         std::vector<double> soln;
@@ -80,27 +81,31 @@ bool IKFastPR2::ikAllSolnRightArm(const KDL::Frame& wrist_frame, double free_ang
         for( std::size_t j = 0; j < solvalues.size(); ++j){
             soln.push_back(solvalues[j]);
         }
-        // Hard limits
-#ifdef USE_HARD_JOINT_LIMITS
+#ifdef USE_HARD_JOINT_LIMITS // Hard joint limits
         if (soln[0] > -2.28540394 && soln[0] < 0.71460237 &&
             soln[1] > -0.52360052 && soln[1] < 1.39630005 &&
             soln[2] > -3.90000803 && soln[2] < 0.79999959 &&
             soln[3] > -2.32130536 && soln[3] < 0 &&
             soln[5] > -2.1800035 && soln[5] < 0){
-            soln_list->push_back(soln);
+          soln_list->push_back(soln);
+          printf("[IKFast][RightArm]    Solution %d within (hard) joint limits\n", i);
+        } else {
+          printf("[IKFast][RightArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
         }
-#endif
-
-        // Soft joint limits - this causes ik to fail a lot more, but i'll leave
-        // it here just cause.
-#ifdef USE_SOFT_JOINT_LIMITS
+#elseif USE_SOFT_JOINT_LIMITS // Soft joint limits
         if (soln[0] > -2.1353981634 && soln[0] < 0.564601836603 &&
             soln[1] > -.3536 && soln[1] < 1.2963 &&
             soln[2] > -3.75 && soln[2] < .65 &&
             soln[3] > -2.1213 && soln[3] < -.15 &&
             soln[5] > -2 && soln[5] < -.1){
-            soln_list->push_back(soln);
+          soln_list->push_back(soln);
+          printf("[IKFast][RightArm]    Solution %d within (soft) joint limits\n", i);
+        } else {
+          printf("[IKFast][RightArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
         }
+#else
+        printf("[IKFast][RightArm]    Solution %d not checked against joint limits\n", i);
+        soln_list->push_back(soln);
 #endif
     }
     if (!soln_list->size()){
@@ -209,7 +214,6 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
     //        eerot[7],
     //        eerot[8]);
 
-
     IkSolutionList<ik_pr2_leftarm::IkReal> solutions;
     std::vector<ik_pr2_leftarm::IkReal> vfree(ik_pr2_leftarm::GetNumFreeParameters(), free_angle);
     bool ik_success = ik_pr2_leftarm::ComputeIk(eetrans, eerot, &vfree[0], 
@@ -218,6 +222,7 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
         return false;
     }
 
+    printf("[IKFast][LeftArm] Found %d solutions:\n", solutions.GetNumSolutions());
     std::vector<ik_pr2_leftarm::IkReal> solvalues(ik_pr2_leftarm::GetNumJoints());
     for(size_t i = 0; i < solutions.GetNumSolutions(); ++i) {
         std::vector<double> soln;
@@ -227,27 +232,31 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
         for( std::size_t j = 0; j < solvalues.size(); ++j){
             soln.push_back(solvalues[j]);
         }
-        // Hard limits
-#ifdef USE_HARD_JOINT_LIMITS
+#ifdef USE_HARD_JOINT_LIMITS // Hard joint limits
         if (soln[0] > -0.71460237 && soln[0] < 2.28540394 &&
             soln[1] > -0.52360052 && soln[1] < 1.39630005 &&
             soln[2] > -0.79999959 && soln[2] < 3.90000803 &&
             soln[3] > -2.32130536 && soln[3] < 0 &&
             soln[5] > -2.1800035 && soln[5] < 0){
             soln_list->push_back(soln);
-        }
-#endif
-
-#ifdef USE_SOFT_JOINT_LIMITS
-        // Soft joint limits - this causes ik to fail a lot more, but i'll leave
-        // it here just cause.
+            printf("[IKFast][LeftArm]    Solution %d within (hard) joint limits\n", i);
+          } else {
+            printf("[IKFast][LeftArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
+          }
+#elseif USE_SOFT_JOINT_LIMITS // Soft joint limits
         if (soln[0] > -0.564601836603 && soln[0] < 2.1353981634 &&
             soln[1] > -.3536 && soln[1] < 1.2963 &&
             soln[2] > -0.65 && soln[2] < 3.75 &&
             soln[3] > -2.1213 && soln[3] < -.15 &&
             soln[5] > -2 && soln[5] < -.1){
             soln_list->push_back(soln);
-        }
+            printf("[IKFast][LeftArm]    Solution %d within (soft) joint limits\n", i);
+          } else {
+            printf("[IKFast][LeftArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
+          }
+#else
+        printf("[IKFast][LeftArm]    Solution %d not checked against joint limits\n", i);
+        soln_list->push_back(soln);
 #endif
     }
     if (!soln_list->size()){
