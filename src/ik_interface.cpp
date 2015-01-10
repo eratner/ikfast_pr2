@@ -71,7 +71,7 @@ bool IKFastPR2::ikAllSolnRightArm(const KDL::Frame& wrist_frame, double free_ang
         return false;
     }
 
-    printf("[IKFast][RightArm] Found %d solutions:\n", solutions.GetNumSolutions());
+    //printf("[IKFast][RightArm] Found %d solutions:\n", solutions.GetNumSolutions());
     std::vector<ik_pr2_rightarm::IkReal> solvalues(ik_pr2_rightarm::GetNumJoints());
     for(size_t i = 0; i < solutions.GetNumSolutions(); ++i) {
         std::vector<double> soln;
@@ -88,9 +88,9 @@ bool IKFastPR2::ikAllSolnRightArm(const KDL::Frame& wrist_frame, double free_ang
             soln[3] > -2.32130536 && soln[3] < 0 &&
             soln[5] > -2.1800035 && soln[5] < 0){
           soln_list->push_back(soln);
-          printf("[IKFast][RightArm]    Solution %d within (hard) joint limits\n", i);
+          //printf("[IKFast][RightArm]    Solution %d within (hard) joint limits\n", i);
         } else {
-          printf("[IKFast][RightArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
+          //printf("[IKFast][RightArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
         }
 #elseif USE_SOFT_JOINT_LIMITS // Soft joint limits
         if (soln[0] > -2.1353981634 && soln[0] < 0.564601836603 &&
@@ -99,12 +99,12 @@ bool IKFastPR2::ikAllSolnRightArm(const KDL::Frame& wrist_frame, double free_ang
             soln[3] > -2.1213 && soln[3] < -.15 &&
             soln[5] > -2 && soln[5] < -.1){
           soln_list->push_back(soln);
-          printf("[IKFast][RightArm]    Solution %d within (soft) joint limits\n", i);
+          //printf("[IKFast][RightArm]    Solution %d within (soft) joint limits\n", i);
         } else {
-          printf("[IKFast][RightArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
+          //printf("[IKFast][RightArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
         }
 #else
-        printf("[IKFast][RightArm]    Solution %d not checked against joint limits\n", i);
+        //printf("[IKFast][RightArm]    Solution %d not checked against joint limits\n", i);
         soln_list->push_back(soln);
 #endif
     }
@@ -222,7 +222,7 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
         return false;
     }
 
-    printf("[IKFast][LeftArm] Found %d solutions:\n", solutions.GetNumSolutions());
+    //printf("[IKFast][LeftArm] Found %d solutions:\n", solutions.GetNumSolutions());
     std::vector<ik_pr2_leftarm::IkReal> solvalues(ik_pr2_leftarm::GetNumJoints());
     for(size_t i = 0; i < solutions.GetNumSolutions(); ++i) {
         std::vector<double> soln;
@@ -239,9 +239,9 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
             soln[3] > -2.32130536 && soln[3] < 0 &&
             soln[5] > -2.1800035 && soln[5] < 0){
             soln_list->push_back(soln);
-            printf("[IKFast][LeftArm]    Solution %d within (hard) joint limits\n", i);
+            //printf("[IKFast][LeftArm]    Solution %d within (hard) joint limits\n", i);
           } else {
-            printf("[IKFast][LeftArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
+            //printf("[IKFast][LeftArm]    ERROR: Solution %d outside (hard) joint limits\n", i);
           }
 #elseif USE_SOFT_JOINT_LIMITS // Soft joint limits
         if (soln[0] > -0.564601836603 && soln[0] < 2.1353981634 &&
@@ -250,12 +250,12 @@ bool IKFastPR2::ikAllSolnLeftArm(const KDL::Frame& wrist_frame,
             soln[3] > -2.1213 && soln[3] < -.15 &&
             soln[5] > -2 && soln[5] < -.1){
             soln_list->push_back(soln);
-            printf("[IKFast][LeftArm]    Solution %d within (soft) joint limits\n", i);
+            //printf("[IKFast][LeftArm]    Solution %d within (soft) joint limits\n", i);
           } else {
-            printf("[IKFast][LeftArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
+            //printf("[IKFast][LeftArm]    ERROR: Solution %d outside (soft) joint limits\n", i);
           }
 #else
-        printf("[IKFast][LeftArm]    Solution %d not checked against joint limits\n", i);
+        //printf("[IKFast][LeftArm]    Solution %d not checked against joint limits\n", i);
         soln_list->push_back(soln);
 #endif
     }
